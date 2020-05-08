@@ -15,7 +15,8 @@ defmodule TicTacToe.Application do
       TicTacToeWeb.Endpoint,
       # Start a worker by calling: TicTacToe.Worker.start_link(arg)
       # {TicTacToe.Worker, arg}
-      {TicTacToe.RegistryServer, []}
+      {Registry, keys: :unique, name: TicTacToe.GameRegistry},
+      {DynamicSupervisor, strategy: :one_for_one, name: TicTacToe.GameSupervisor}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

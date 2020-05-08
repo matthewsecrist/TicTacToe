@@ -1,7 +1,8 @@
 defmodule TicTacToe.Game do
   defstruct board: nil,
             current_player: "x",
-            game_over: false
+            game_over: false,
+            winner: nil
 
   alias TicTacToe.Board
 
@@ -18,7 +19,13 @@ defmodule TicTacToe.Game do
       {:ok, %__MODULE__{board: new_board, current_player: next_player}}
     else
       {:ok, :winner, new_board} ->
-        {:ok, %__MODULE__{board: new_board, current_player: nil, game_over: true}}
+        {:ok,
+         %__MODULE__{
+           board: new_board,
+           winner: current_player,
+           current_player: nil,
+           game_over: true
+         }}
 
       {:ok, _} ->
         {:error, :something_else_happened_here}

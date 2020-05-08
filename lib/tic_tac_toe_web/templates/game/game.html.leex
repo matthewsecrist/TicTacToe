@@ -1,0 +1,14 @@
+<div class="game">
+  <h1>Current Game Passcode: <%= @passcode %></h1>
+  <p>
+    Current Player: <%= @game.current_player %> -
+    Winner: <%= @game.winner %> -
+    Game Over: <%= @game.game_over %>
+  </p>
+
+  <div class="game-board">
+    <%= for {space, idx} <- Enum.with_index(@game.board) do %>
+      <%= live_component @socket, TicTacToeWeb.GameSpace, id: idx, space: space, passcode: @passcode %>
+    <% end %>
+  </div>
+</div>

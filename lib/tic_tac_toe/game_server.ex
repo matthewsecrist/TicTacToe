@@ -4,27 +4,18 @@ defmodule TicTacToe.GameServer do
   alias TicTacToe.Game
 
   ### CLient
-  def new() do
-    GenServer.start_link(__MODULE__, nil)
-  end
-
-  def move(pid, move) do
-    GenServer.call(pid, {:play_turn, move})
-  end
-
-  def get_state(pid) do
-    GenServer.call(pid, {:state})
-  end
-
-  ### Server
-
-  @impl true
-  def init(nil) do
-    Game.new()
+  def start_link(opts) do
+    {:ok, game} = Game.new()
+    GenServer.start_link(__MODULE__, game, opts)
   end
 
   @impl true
-  def handle_call({:play_turn, move}, _from, game) do
+  def init(game) do
+    {:ok, game}
+  end
+
+  @impl true
+  def handle_call({:move, move}, _from, game) do
     with {:ok, new_state} <- Game.move(game, move) do
       {:reply, new_state, new_state}
     else
