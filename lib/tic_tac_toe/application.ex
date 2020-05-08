@@ -7,7 +7,13 @@ defmodule TicTacToe.Application do
 
   def start(_type, _args) do
     children = [
-      # Starts a worker by calling: TicTacToe.Worker.start_link(arg)
+      # Start the Telemetry supervisor
+      TicTacToeWeb.Telemetry,
+      # Start the PubSub system
+      {Phoenix.PubSub, name: TicTacToe.PubSub},
+      # Start the Endpoint (http/https)
+      TicTacToeWeb.Endpoint,
+      # Start a worker by calling: TicTacToe.Worker.start_link(arg)
       # {TicTacToe.Worker, arg}
       {TicTacToe.RegistryServer, []}
     ]
@@ -16,5 +22,12 @@ defmodule TicTacToe.Application do
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: TicTacToe.Supervisor]
     Supervisor.start_link(children, opts)
+  end
+
+  # Tell Phoenix to update the endpoint configuration
+  # whenever the application is updated.
+  def config_change(changed, _new, removed) do
+    TicTacToeWeb.Endpoint.config_change(changed, removed)
+    :ok
   end
 end
